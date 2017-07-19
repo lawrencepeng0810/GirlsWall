@@ -1,0 +1,200 @@
+<html>	
+<head>
+<meta charset="utf-8">
+</head>
+<style>
+
+	body {
+		background-color:#e6e6e6;
+		
+	}
+	img {
+		margin: 1px;
+		padding: 8px;
+		box-shadow: 1px 2px 4px rgba(0, 0, 0, .6);
+		float:left;
+		display:inline;
+		
+	}
+	ol {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+	ol li {
+		display: inline-block;
+		}
+		
+	/* ol li:hover {border-bottom-color:#ccc; border:1px solid;} */
+	
+	
+	#main {
+		width:80%;
+		height:100%;
+		margin:0 auto;
+	}
+	
+	#result {
+		    position: realtive;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,.7);
+			overflow: hidden;		
+			overflow-y:hidden;/*Y軸卷軸*/
+	}
+	#result img {
+		max-width:500px;
+		max-height:500px;
+		position: absolute;
+		left:30%;
+		top:30px;
+		overflow-y:hidden;/*Y軸卷軸*/
+	}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<body>
+<h1>Girl's Wall with API</h1>
+<div id="main">
+	
+	<button id="mybtn">ClickMe</button>
+	<div id="place">
+		<img id="loading" src="./loading.gif"> <span id="status">Gril's Loading....</span>
+	</div>
+	<script type="application/javascript">
+		var mybtn=document.getElementById('mybtn');
+			mybtn.addEventListener('click',function(e) {
+			console.log(e.target.textContent);
+		});
+		
+	// ajax 非同步處理
+	var xhr= new XMLHttpRequest();
+
+	xhr.open('GET','http://gank.io/api/data/%E7%A6%8F%E5%88%A9/100/1');
+	//console.log(xhr.responseText);
+	xhr.onreadystatechange=function() {
+		if (xhr.readyState===4){ 
+		    document.getElementById('loading').style.display = 'none';
+			document.getElementById('status').style.display = 'none';
+			var data = JSON.parse(xhr.responseText);
+			//console.log(data);
+			//var jsonData = JSON.stringify({name:'amy'});
+			//console.log(jsonData);
+			
+			//Object.keys(obj).forEach(function(key) {
+
+			//console.log(key, obj[key]);
+
+			//});
+			// 有兩個物件第一個是error 第二是results >>> 我們要抓取 results
+			var ol = document.createElement("ol");
+			document.getElementById('place').appendChild(ol);
+					
+			Object.keys(data.results).forEach(function(i,v) {
+				//console.log(data.results[v].url);
+				var li = document.createElement("li");
+				var elem = document.createElement("img");
+				var picsize = getImgSize(data.results[v].url);
+				elem.setAttribute("src",data.results[v].url);
+				elem.setAttribute("width",'190px');
+				elem.setAttribute("height",(190/0.90).toFixed(0)+'px');
+				elem.setAttribute("id",data.results[v]._id);
+				elem.setAttribute("alt",data.results[v]._id);
+				li.appendChild(elem);
+				ol.appendChild(li);
+			});
+			ImgZoom();
+			//ImgZoom(document.getElementById('5931fd87421aa92c769a8c03'));	
+		}
+	}
+	
+	function getImgSize(imgSrc)
+	{
+		var size=[2];
+		var newImg=new Image();
+			newImg.src=imgSrc;
+			size[0]=newImg.width;
+			size[1]=newImg.height;
+		return size;
+	}
+	function ImgClose() {
+				var resultDiv = document.getElementById('result').parentNode;
+				resultDiv.removeChild(result);
+			}
+	// 跳出DIV並帶圖片
+	function ImgZoom() {
+		if (document.getElementById('result')!== null){	
+					document.getElementById('result').addEventListener('click',function(e){
+						var result = document.getElementById('result');	
+								result.parentNode.removeChild(result);
+					});
+				}
+				
+		//console.log(screen.width/2);
+		//console.log(screen.height/2);
+		var AllImage=document.getElementsByTagName('img');
+			[].forEach.call(AllImage,function(i) {	
+				
+				document.getElementById(i.id).addEventListener('click',function(e) {
+					
+					if (document.getElementById('result')!== null){	// Check 使否先前有產生過 Div > Image 
+					    //console.log(document.body.scrollTop);
+						var result = document.getElementById('result');	
+						    result.parentNode.removeChild(result);
+						//document.getElementById('result').parentNode.removeChild('result');
+						//document.getElementsByTag('html').removeChild(document.getElementById('result').firstChild);	// 若有,則刪除 Img Label
+					}
+					
+					//console.log(document.body.scrollTop,this.getBoundingClientRect().left);
+					var elem1 = document.createElement("img")
+						elem1.setAttribute("src",i.src);
+						elem1.setAttribute("alt",i.id);
+						elem1.setAttribute("id","largeimg");
+						
+						//elem1.setAttribute("style","max-width:450px;");  // 等比例縮放 Width
+						//elem1.setAttribute("style","max-height:450px;");  // 等比例縮放 Height
+						
+					var div1 = document.createElement("div");
+					    div1.setAttribute("id","result");
+						div1.setAttribute("onclick","ImgClose()");
+						
+						div1.style.top = document.body.scrollTop+'px';     // 背景遮罩 全螢幕
+												
+						//div1.style.left = window.innerWidth*0.6 + 'px';
+						div1.style.position = 'realtive';
+						div1.style.position = 'absolute';
+						div1.appendChild(elem1);
+						document.body.appendChild(div1);
+						
+				});
+				
+			//console.log(i.src);
+		});
+		// 第二種寫法
+		/*var AllImage=document.getElementsByTagName('img');
+				Array.prototype.forEach.call(AllImage,function(i) {
+					console.log(i.src);
+				});
+		*/
+		/*
+		var modal=document.getElementById('result');
+			modal.addEventListener('click', function(e) {
+				
+				window.onclick = function(event) {
+					if (event.target == modal) {
+						modal.style.display = "none";
+					}
+				}
+			});
+			*/
+			
+	}
+	
+	
+	xhr.send();
+			
+	</script>
+</div>
+
+
+</body>
+</html>
