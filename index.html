@@ -91,12 +91,12 @@
 			// 有兩個物件第一個是error 第二是results >>> 我們要抓取 results
 			var list= new Array(data.results.length);
 			var q=0;
-			var exists = false;
+			//var exists = false;
 			var ol = document.createElement("ol");
 			document.getElementById('place').appendChild(ol);
 					
 			//Object.keys(data.results).forEach(function(i,v) {
-			  
+			  /*
 				while (q<list.length) {
 						do 
 						{
@@ -107,21 +107,30 @@
 						list[q]=v; 
 						q+=1;
 				}
-			//});	
-				list.forEach(function(i,v) { 							
-					//console.log(data.results[v].url);
-					var li = document.createElement("li");
-					var elem = document.createElement("img");
-					var picsize = getImgSize(data.results[i].url);
-					elem.setAttribute("src",data.results[i].url);
-					elem.setAttribute("width",'190px');
-					elem.setAttribute("height",(190/0.90).toFixed(0)+'px');
-					elem.setAttribute("id",data.results[i]._id);
-					elem.setAttribute("alt",data.results[i]._id);
-					li.appendChild(elem);
-					ol.appendChild(li);
-				});
-			
+				list.forEach(function(i,v) { 		
+				*/
+				while (q<list.length) {
+				
+					v = Math.floor(Math.random() * data.results.length);	
+							
+					if (list.indexOf(v) == -1) { 
+						//console.log(data.results[v].url);
+						var li = document.createElement("li");
+						var elem = document.createElement("img");
+						var picsize = getImgSize(data.results[v].url);
+						elem.setAttribute("src",data.results[v].url);
+						elem.setAttribute("width",'190px');
+						elem.setAttribute("height",(190/0.90).toFixed(0)+'px');
+						elem.setAttribute("id",data.results[v]._id);
+						elem.setAttribute("alt",data.results[v]._id);
+						li.appendChild(elem);
+						ol.appendChild(li);
+						
+						list[q]=v; 
+					
+					q+=1;
+				}
+			}
 			ImgZoom();
 			//ImgZoom(document.getElementById('5931fd87421aa92c769a8c03'));	
 		}
