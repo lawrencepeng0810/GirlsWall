@@ -1,34 +1,34 @@
 <html>	
 <head>
 <meta charset="utf-8">
-<title>GirlsWall</title>
+<title>PictureWall</title>
 </head>
 <style>
 
 	body {
-		background-color:#e6e6e6;
-		
+		background-color:#e6e6e6;	
 	}
+	
 	img {
 		margin: 1px;
 		padding: 8px;
 		box-shadow: 1px 2px 4px rgba(0, 0, 0, .6);
 		float:left;
-		display:inline;
-		
+		display:inline;	
 	}
+	
 	ol {
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
 	}
+	
 	ol li {
 		display: inline-block;
 		}
 		
 	/* ol li:hover {border-bottom-color:#ccc; border:1px solid;} */
-	
-	
+		
 	#main {
 		width:80%;
 		height:100%;
@@ -43,6 +43,7 @@
 			overflow: hidden;		
 			overflow-y:hidden;/*Y軸卷軸*/
 	}
+	
 	#result img {
 		max-width:500px;
 		max-height:500px;
@@ -51,15 +52,16 @@
 		top:30px;
 		overflow-y:hidden;/*Y軸卷軸*/
 	}
+	
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <body>
-<h1>Girl's Wall with API</h1>
+<h1>Picture Wall with API</h1>
 <div id="main">
 	
 	<button id="mybtn">ClickMe</button>
 	<div id="place">
-		<img id="loading" src="./loading.gif"> <span id="status">Gril's Loading....</span>
+		<img id="loading" src="./loading.gif"> <span id="status">Picture Loading....</span>
 	</div>
 	<script type="application/javascript">
 		var mybtn=document.getElementById('mybtn');
@@ -87,22 +89,39 @@
 
 			//});
 			// 有兩個物件第一個是error 第二是results >>> 我們要抓取 results
+			var list= new Array(data.results.length);
+			var q=0;
+			var exists = false;
 			var ol = document.createElement("ol");
 			document.getElementById('place').appendChild(ol);
 					
-			Object.keys(data.results).forEach(function(i,v) {
-				//console.log(data.results[v].url);
-				var li = document.createElement("li");
-				var elem = document.createElement("img");
-				var picsize = getImgSize(data.results[v].url);
-				elem.setAttribute("src",data.results[v].url);
-				elem.setAttribute("width",'190px');
-				elem.setAttribute("height",(190/0.90).toFixed(0)+'px');
-				elem.setAttribute("id",data.results[v]._id);
-				elem.setAttribute("alt",data.results[v]._id);
-				li.appendChild(elem);
-				ol.appendChild(li);
-			});
+			//Object.keys(data.results).forEach(function(i,v) {
+			  
+				while (q<list.length) {
+						do 
+						{
+							exists = false;
+							v = Math.floor(Math.random() * data.results.length);	
+							if (list.indexOf(v) >= 0) exists = true;
+						} while (exists);
+						list[q]=v; 
+						q+=1;
+				}
+			//});	
+				list.forEach(function(i,v) { 							
+					//console.log(data.results[v].url);
+					var li = document.createElement("li");
+					var elem = document.createElement("img");
+					var picsize = getImgSize(data.results[i].url);
+					elem.setAttribute("src",data.results[i].url);
+					elem.setAttribute("width",'190px');
+					elem.setAttribute("height",(190/0.90).toFixed(0)+'px');
+					elem.setAttribute("id",data.results[i]._id);
+					elem.setAttribute("alt",data.results[i]._id);
+					li.appendChild(elem);
+					ol.appendChild(li);
+				});
+			
 			ImgZoom();
 			//ImgZoom(document.getElementById('5931fd87421aa92c769a8c03'));	
 		}
@@ -117,6 +136,7 @@
 			size[1]=newImg.height;
 		return size;
 	}
+	
 	function ImgClose() {
 				var resultDiv = document.getElementById('result').parentNode;
 				resultDiv.removeChild(result);

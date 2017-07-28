@@ -1,2 +1,2 @@
-# GirlsWall
-JavaScript 正妹牆
+# PictureWall
+JavaScript 照片牆
